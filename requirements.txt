@@ -1,0 +1,23 @@
+# Pinned so every machine runs the same code. Verified on Python 3.12.10.
+#
+# Install into a fresh virtual environment:
+#   py -3.12 -m venv .venv
+#   .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+#
+# Or just run setup.ps1, which does both.
+
+# Main PDF library (QPDF backend). Handles compressed cross-reference streams,
+# object streams and FlateDecode content, which the spec requires and forbids
+# reimplementing.
+pikepdf==10.11.0
+
+# Second opinion for inspect mode: a different library counting the same things
+# catches mistakes a single implementation would hide.
+pypdf==6.15.0
+
+# Config files.
+PyYAML==6.0.3
+
+# Builds the test fixtures. Not used by the tool itself, but required to run
+# the tests in tests/.
+reportlab==5.0.0

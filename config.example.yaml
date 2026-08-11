@@ -1,0 +1,75 @@
+﻿# Spec section 3 parameters. Nothing here has a hard-coded fallback in the
+# code, so every key below must be supplied (either in this file or as a
+# command line override) before a run will start.
+
+# Mode:
+#   inspect        writes nothing, reports what is in the file
+#   convert        explicit destinations -> named destinations
+#   split          split an already converted file into parts
+#   convert+split  both, in the only order that is safe
+mode: convert+split
+
+# A single PDF, or a folder to process every PDF inside it (batch mode).
+input_path: input_files/input.pdf
+
+# Must differ from input_path. The input is never modified.
+# In the split modes this is the base name the parts are derived from.
+# In batch mode this is a folder, and each part name is derived from its
+# own input file.
+output_path: output_files/converted.pdf
+
+# Identifies names produced by this tool. Keep it distinctive so it cannot be
+# confused with the internal naming used by merge and authoring tools
+# (they favour bare G/P/Dest/page style names).
+name_prefix: PXD_
+
+# Zero-padding width for the page index inside a name. Must be wide enough for
+# the document's page count, with room to spare: raising it later changes every
+# generated name. 6 covers up to 999,999 pages.
+name_pad_width: 6
+
+# Bookmark tree handling. Default is to process it; set to false only for the
+# exceptional case where bookmarks must be left completely alone.
+process_outlines: true
+
+# Base path for the report. Two files are written: .json and .txt
+report_path: output_files/report
+
+
+# --- split parameters (only used by the split modes) ------------------------
+# Splitting is done by this tool rather than a downstream one, so that named
+# destinations are guaranteed to survive the split instead of depending on an
+# external tool to preserve them.
+
+# Hard upper bound on pages per output file.
+split_max_pages: 6999
+
+# How a cut is placed:
+#   pages    cut exactly at split_max_pages, matching the external tool
+#            currently in use
+#   outline  pull each cut back to the nearest bookmark target so no listing
+#            is divided across two files; falls back to a hard cut when the
+#            next bookmark is further away than split_max_pages
+split_align: pages
+
+# How much of the bookmark tree each part carries. A merge tool concatenates
+# whatever it finds, so a full copy in every part shows up once per part in the
+# merged document.
+#   first  only part 1 carries the tree, complete. The merged document gets
+#          exactly the original tree, once. Later parts have no bookmark panel.
+#   own    each part keeps the bookmarks pointing at its own pages plus the
+#          ancestors holding them. Standalone parts show only working
+#          bookmarks, but a shared ancestor appears in more than one part.
+#   all    every part carries the whole tree. Matches the old external tool
+#          and duplicates on merge.
+#   none   no bookmarks anywhere.
+split_outlines: first
+
+# Output file naming. {stem} and {suffix} come from output_path, {n} is the
+# 1-based part number and {total} the number of parts. {n} is required.
+split_name_pattern: "{stem} split {n}{suffix}"
+
+# Splitting a file that still holds explicit destinations destroys them
+# permanently, so it is refused. Set true only to reproduce the old behaviour
+# deliberately.
+split_allow_explicit: false
