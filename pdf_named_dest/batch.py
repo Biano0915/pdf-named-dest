@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import dataclasses
 import json
+import os.path
 import pathlib
 import time
 from dataclasses import dataclass, field
@@ -21,6 +22,44 @@ from .split import split
 STATUS_OK = "ok"
 STATUS_SKIPPED = "skipped"
 STATUS_FAILED = "failed"
+
+# Summary table name column. Files produced together tend to share a long
+# generated prefix and differ only at the tail, so a head-preserving truncation
+# hides the one part of the name that identifies the row.
+NAME_COL_MAX = 72
+# Below this, stripping the shared head costs more in explanation than it saves.
+MIN_SHARED_PREFIX = 8
+
+
+def _shared_prefix(names: list[str]) -> str:
+    """The head every name has in common, trimmed back to a word boundary.
+
+    Returns "" when there is nothing worth stripping, so the caller can treat
+    "no shared prefix" and "prefix too short to bother" identically.
+    """
+    if len(names) < 2:
+        return ""
+    prefix = os.path.commonprefix(names)
+    # Cutting mid-word reads as corruption; back up to a natural break.
+    cut = max((prefix.rfind(c) for c in " -_/\\"), default=-1)
+    prefix = prefix[:cut + 1] if cut >= 0 else ""
+    if len(prefix) < MIN_SHARED_PREFIX:
+        return ""
+    # Never strip a name down to nothing.
+    if any(len(n) <= len(prefix) for n in names):
+        return ""
+    return prefix
+
+
+def _shorten(name: str, width: int) -> str:
+    """Drop characters from the middle, because the tail is the identifying end."""
+    if len(name) <= width:
+        return name
+    if width <= 3:
+        return name[:width]
+    keep_tail = (width - 3) * 2 // 3
+    keep_head = width - 3 - keep_tail
+    return name[:keep_head] + "..." + name[len(name) - keep_tail:]
 
 
 @dataclass
@@ -78,14 +117,22 @@ class BatchResult:
         lines.append(f"  input folder         : {self.input_dir}")
         lines.append(f"  output folder        : {self.output_dir}")
         lines.append(f"  files                : {len(self.items)}")
+
+        # Strip the shared head so the column carries only what differs. The
+        # full name still goes to the JSON and to the failures block below.
+        prefix = _shared_prefix([i.name for i in self.items])
+        shown = [i.name[len(prefix):] for i in self.items]
+        if prefix:
+            lines.append(f"  shared name prefix   : {prefix}")
+            lines.append("                         (trimmed from the table below)")
         lines.append("")
 
-        width = max((len(i.name) for i in self.items), default=4)
-        width = min(width, 52)
+        width = max((len(n) for n in shown), default=4)
+        width = min(width, NAME_COL_MAX)
         header = f"    {'file':<{width}}  {'pages':>7} {'names':>6} {'parts':>6} {'dead':>5}  status"
         lines.append(header)
-        for i in self.items:
-            name = i.name if len(i.name) <= width else i.name[:width - 3] + "..."
+        for i, display in zip(self.items, shown):
+            name = _shorten(display, width)
             dead = str(i.n_unresolved) if i.status == STATUS_OK else "-"
             # The row keeps the detail short; the failures block below prints
             # it in full.
