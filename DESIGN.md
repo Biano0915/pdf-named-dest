@@ -4,11 +4,11 @@ How this tool works and why it is built the way it is. Read
 [README.md](README.md) first if you just want to run it, and
 [RUNBOOK.md](RUNBOOK.md) if you are processing a file today.
 
-> **On the section numbering.** Comments throughout the code and the other
-> documents cite sections as `spec 4.2 Step 1`, `spec section 6` and so on.
-> Those refer to the numbered sections of this document — the numbering predates
-> the file name and is left alone rather than churning 70-odd references. Keep it
-> stable if you fork this.
+> **On the section numbering.** Comments in the source still cite sections as
+> `spec 4.2 Step 1`, `spec section 6` and so on. Those refer to the numbered
+> sections of this document; the wording predates the file name and was left
+> alone rather than churning every comment. Keep the numbering stable if you
+> fork this.
 
 ---
 

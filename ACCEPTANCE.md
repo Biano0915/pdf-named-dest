@@ -16,7 +16,7 @@ production document, named generically here)
 
 | # | Criterion | Result | Evidence |
 |---|---|---|---|
-| 1 | Every section 3 parameter externally configurable, no hard-coded values | PASS | `config.py` exits with `ConfigError` (code 2) if any parameter is missing; see `config.example.yaml` |
+| 1 | Every DESIGN 3 parameter externally configurable, no hard-coded values | PASS | `config.py` exits with `ConfigError` (code 2) if any parameter is missing; see `config.example.yaml` |
 | 2 | All effective parameter values printed at run time | PASS | Every run opens with `EFFECTIVE PARAMETERS`, seven entries |
 | 3 | Input unmodified after the run (hash comparison) | PASS | sha256 before and after both `ad84f094…6f15` |
 | 4 | Output page count identical to the input | PASS | 10,587 → 10,587 |
@@ -45,7 +45,7 @@ production document, named generically here)
 | Second conversion (idempotency check) | 4.06 s |
 | Output size | 33.2 MB (+0.6%, i.e. the added name tree) |
 
-The "memory and processing time on large files" risk in spec section 9 can be
+The "memory and processing time on large files" risk in DESIGN 9 can be
 downgraded.
 
 ---
@@ -66,14 +66,14 @@ downgraded.
 63 destinations deduplicate to 32 names because the table of contents links and
 the bookmarks mostly point at the same targets and therefore share names. The
 original file contains **no dead destinations at all**, which confirms what
-spec section 2 states: links die at the moment of the split, not before.
+DESIGN 2 states: links die at the moment of the split, not before.
 
 ---
 
 ## Note on how criteria 8 and 9 were met
 
-The spec asks for "at least 30 sampled links" and "at least 5 sampled
-bookmarks" to be compared by clicking. This was done instead as an
+The acceptance criteria ask for "at least 30 sampled links" and "at least 5
+sampled bookmarks" to be compared by clicking. This was done instead as an
 **exhaustive automated comparison** in `tests/verify_equivalence.py`:
 
 1. Pair every link annotation and outline node in the input with its
@@ -89,7 +89,7 @@ bookmarks" to be compared by clicking. This was done instead as an
      in the output
 
 This is stronger than sampling: 100% coverage, and it catches deduplication
-errors that a sample could easily miss — the failure spec section 9 describes
+errors that a sample could easily miss — the failure DESIGN 9 describes
 as hard to notice.
 
 **It does not replace clicking by hand.** Structural correctness is not the
@@ -103,7 +103,7 @@ target reader before delivery is still recommended.
 Splitting was originally left to a downstream tool and was brought into this one
 partway through. The results below cover that addition.
 
-Reason for the change: performing the split here turns spec section 6
+Reason for the change: performing the split here turns DESIGN 6
 assumption 2 (whether the splitter preserves the name tree) from an
 unverifiable external risk into behaviour this tool guarantees. That leaves the
 merge side as the only external dependency in the chain, and that side has been
@@ -202,7 +202,7 @@ independently in `tests/merge_assumption` (passed).
    by clicking in the target reader. Structural correctness is not the same as
    correct reader behaviour.
 2. **Page labels.** If the input carries `/PageLabels`, they are not carried
-   into the parts and the report issues a warning. Per spec 1.3 this is handled
+   into the parts and the report issues a warning. Per DESIGN 1.3 this is handled
    by a downstream tool.
 
 ---

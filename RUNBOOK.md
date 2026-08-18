@@ -312,7 +312,7 @@ Keep `report.json` and `report_split.json` as the audit record.
 | `error: name_pad_width=N is too small` | Pad width too small for this document's page count | Do not simply raise it — check whether the page count is unexpected. If it genuinely must change, this document must use the new value every time from then on |
 | `inspect` shows many `unresolved` | The file has already been split | Ask for the pre-split original |
 | `inspect` shows `encrypted: True` | The file has permission protection | Ask for an unprotected copy |
-| Split report warns about `/PageLabels` | The input carries page labels, which are not carried into the parts | Handled downstream per spec 1.3; raise it separately if downstream needs them |
+| Split report warns about `/PageLabels` | The input carries page labels, which are not carried into the parts | Handled downstream per DESIGN 1.3; raise it separately if downstream needs them |
 | Links do nothing after a merge | See below | |
 
 ### Links dead after a merge

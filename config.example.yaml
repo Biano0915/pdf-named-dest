@@ -1,4 +1,4 @@
-﻿# Spec section 3 parameters. Nothing here has a hard-coded fallback in the
+﻿# DESIGN 3 parameters. Nothing here has a hard-coded fallback in the
 # code, so every key below must be supplied (either in this file or as a
 # command line override) before a run will start.
 

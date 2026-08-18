@@ -47,7 +47,7 @@ healthy:  /A << /S /GoTo /D [ 16 0 R  /FitH  612 ] >>     -> page 2
 broken:   /A << /S /GoTo /D [ null    /FitH  612 ] >>     -> null
 ```
 
-That `null` is exactly what spec section 2 describes. **These links cannot be
+That `null` is exactly what DESIGN 2 describes. **These links cannot be
 recovered** — nothing in the file records which page they were meant to reach.
 
 ### 2. The two files' bookmarks are perfectly complementary
@@ -77,7 +77,7 @@ bookmark panel.
 Of split 1's 31 links, 15 point at pages that ended up in split 2 and were all
 blanked to null. Those 15 target pages are sitting intact in split 2.
 
-### 4. The splitter preserved the annotations (spec section 6 assumption 1 holds)
+### 4. The splitter preserved the annotations (DESIGN 6 assumption 1 holds)
 
 The splitter **did not delete any annotation**; it only set the first element
 of the destination array to `null`. All 31 link annotations in split 1 are
@@ -95,7 +95,7 @@ file that has one, then running a real split on it.
 ### 5. Performance is not a concern
 
 10,587 pages scanned in 1.7 seconds in total. The "memory and processing time
-on large files" risk in spec section 9 can be downgraded at this scale.
+on large files" risk in DESIGN 9 can be downgraded at this scale.
 
 ### 6. The bookmark tree is duplicated in full across both files
 
@@ -103,7 +103,7 @@ Each file carries the complete 32-entry bookmark tree, so merging them back
 produces 64 entries with one full duplicate. This is **a pre-existing property
 of the current split process, not something this tool causes**, but the merged
 bookmark panel will show duplicates and whoever receives the merged file should
-know. Per spec 1.3, merging and bookmark consolidation are out of scope for this
+know. Per DESIGN 1.3, merging and bookmark consolidation are out of scope for this
 tool.
 
 ---
@@ -112,9 +112,9 @@ tool.
 
 | Uncovered scenario | Why it matters |
 |---|---|
-| Multiple destinations with different coordinates on one page | Spec section 9 lists this as the high risk that is "hard to notice"; every display type here is `/FitH 612`, so it cannot be exercised |
-| Pre-existing named destinations | Spec section 5 rule 4 forbids changing existing names; there is no name tree here |
-| External links `/GoToR`, `/URI` | Spec section 5 requires preserving them exactly; the count here is 0 |
+| Multiple destinations with different coordinates on one page | DESIGN 9 lists this as the high risk that is "hard to notice"; every display type here is `/FitH 612`, so it cannot be exercised |
+| Pre-existing named destinations | DESIGN 5 invariant 4 rules out changing existing names; there is no name tree here |
+| External links `/GoToR`, `/URI` | DESIGN 5 keeps them exactly as found; the count here is 0 |
 | The `/XYZ null null null` form | Extremely common in practice; deduplication must distinguish `null` from `0` |
 
 All four are covered separately by fixtures from `tests/make_fixtures.py`.

@@ -1,4 +1,4 @@
-# Merge assumption verification (spec section 6)
+# Merge assumption verification (DESIGN 6)
 
 **Date** 2026-08-10
 **Status** **Target merge tool verified manually — implementation proceeded**
@@ -7,7 +7,7 @@
 The approach is structurally sound in PDF terms. All four off-the-shelf Python
 merge tools tested failed in the realistic scenario, but **the target merge tool
 — a commercial GUI PDF editor — passed manual verification of the `orphan`
-scenario** (2026-08-10). Spec section 6 assumption 3 holds and the project can
+scenario** (2026-08-10). DESIGN 6 assumption 3 holds and the project can
 proceed.
 
 > The details of every failing tool are kept below. Their significance is no
@@ -22,7 +22,7 @@ proceed.
 
 ## Test design
 
-Minimal test files were built per spec section 6, split into two scenarios:
+Minimal test files were built per DESIGN 6, split into two scenarios:
 
 | File | Contents |
 |---|---|
@@ -32,7 +32,7 @@ Minimal test files were built per spec section 6, split into two scenarios:
 
 `B_orphan` is the realistic post-split shape: the name is defined in the
 content file while the link referencing it lives in the table-of-contents file.
-Spec section 6 originally described only the `referenced` case, and **this
+The design originally described only the `referenced` case, and **this
 distinction only emerged from testing**.
 
 After merging A + B, all three structural checks must pass:
@@ -60,7 +60,7 @@ After merging A + B, all three structural checks must pass:
 
 **pypdf** rebuilds links per source file in `pypdf/generic/_link.py`; a named
 destination that cannot be resolved within its source file is judged invalid
-and discarded outright. This is exactly the top risk in spec section 9
+and discarded outright. This is exactly the top risk in DESIGN 9
 ("the splitter proactively cleans up invalid links"), only occurring on the
 merge side.
 
@@ -84,7 +84,7 @@ objects. It passes both scenarios.
 faithful merge genuinely can express this, and it is entirely valid in PDF
 terms. The problem is that the off-the-shelf tools all add "clever" cleanup.
 
-Status of the three downstream assumptions in spec section 6:
+Status of the three downstream assumptions in DESIGN 6:
 
 | Assumption | Status |
 |---|---|
@@ -138,7 +138,7 @@ to do next:
    property of that specific tool and version.
    **Process documentation must name the verified merge tool and require this
    test to be re-run before any change.**
-2. **Spec section 6 assumption 2 with an external splitter is untested and now
+2. **DESIGN 6 assumption 2 with an external splitter is untested and now
    moot.** The existing split 1 file had no name tree to begin with, so it
    could not be checked. The split is now performed by this tool, which
    guarantees the behaviour; see `FINDINGS_real_files.md`.

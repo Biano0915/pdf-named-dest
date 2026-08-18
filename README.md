@@ -350,20 +350,20 @@ run_batch.ps1       several folders in one run
 input_files/        PDFs to process go here
 output_files/       results: parts and reports
 pdf_named_dest/
-  config.py         parameter loading and effective-value output (spec 3)
+  config.py         parameter loading and effective-value output (DESIGN 3)
   model.py          DestKey / DestSite -- the deduplication key lives here
-  collect.py        scanning annotations and the bookmark tree (spec 4.2 Step 1)
+  collect.py        scanning annotations and the bookmark tree (DESIGN 4.2 Step 1)
   naming.py         name assignment (Step 2)
   rewrite.py        rewriting and writing the name tree (Step 3)
-  split.py          splitting (spec 4.3)
-  inspect_mode.py   inspect mode (spec 4.1)
+  split.py          splitting (DESIGN 4.3)
+  inspect_mode.py   inspect mode (DESIGN 4.1)
   convert_mode.py   convert mode
-  batch.py          whole-folder processing (spec 4.4)
-  report.py         processing report (spec 7)
+  batch.py          whole-folder processing (DESIGN 4.4)
+  report.py         processing report (DESIGN 7)
   cli.py            entry point
 tests/
   make_fixtures.py       awkward-case fixture
   verify_equivalence.py  exhaustive comparison of where links land
   roundtrip.py           convert -> split -> merge, end to end
-  merge_assumption/      merge tool verification (spec 6)
+  merge_assumption/      merge tool verification (DESIGN 6)
 ```
